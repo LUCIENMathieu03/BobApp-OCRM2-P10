@@ -1,0 +1,9 @@
+name: BobApp ci
+on: push
+jobs:
+  Hello:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: echo "Hello BobApp CI"
+      - run: ls
