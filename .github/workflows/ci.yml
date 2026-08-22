@@ -29,7 +29,7 @@ jobs:
         id: test-report
         if: success() || failure()
         with:
-          name: Java Tests
+          name: Java tests
           path: back/target/surefire-reports/*.xml
           reporter: java-junit
       - name: Generate back-end report
@@ -57,4 +57,5 @@ jobs:
       - name: Generate front-end report
         uses: actions/upload-artifact@v7
         with:
+          name: Front coverage
           path: front/coverage/bobapp/
