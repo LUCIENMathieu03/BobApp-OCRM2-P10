@@ -37,3 +37,24 @@ jobs:
         with:
           name: Jacoco
           path: back/target/site/jacoco/
+
+  Front:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up node environment
+        uses: actions/setup-node@v7
+        with:
+          node-version: "18"
+
+      - name: Installing the project
+        working-directory: front
+        run: npm ci
+
+      - name: Angular test
+        working-directory: front
+        run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+      - name: Generate front-end report
+        uses: actions/upload-artifact@v7
+        with:
+          path: front/coverage/bobapp/
