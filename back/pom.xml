@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
         <sonar.organization>lucienmathieu03</sonar.organization>
+        <sonar.projectKey>lucienmathieu03_bobapp-ocrm2-p10</sonar.projectKey>
 	</properties>
 	<dependencies>
 		<dependency>
