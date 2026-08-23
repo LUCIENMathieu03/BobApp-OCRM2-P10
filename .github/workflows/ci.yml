@@ -122,7 +122,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: front
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si on lance le workflow manuelement
+          push: ${{  github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si c'est juste une PR
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-front:latest
 
   Docker-back:
@@ -143,5 +143,5 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: back
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si on lance le workflow manuelement
+          push: ${{ github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si c'est juste une PR
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-back:latest
