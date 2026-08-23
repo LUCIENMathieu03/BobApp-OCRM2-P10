@@ -6,8 +6,7 @@ on: #a quel moment le workflow se déclanche
   pull_request:
     branches:
       - main
-
-  #rajouter un dispacht qui permet de lancer la pipeline manuelement (workflow_dispatch)
+  workflow_dispatch:
 
 permissions:
   checks: write
@@ -104,3 +103,45 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         uses: SonarSource/sonarqube-scan-action@v8.2.1
+
+  Docker-front:
+    needs: [Sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4 # cherche l'action officielle sur github.com/docker
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: front
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si on lance le workflow manuelement
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-front:latest
+
+  Docker-back:
+    needs: [Sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4 # cherche l'action officielle sur github.com/docker
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: back
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} #ne re-push pas sur dockerhub si on lance le workflow manuelement
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-back:latest
